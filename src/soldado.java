@@ -84,7 +84,7 @@ public class soldado {
     }
 
     public final int mover(){
-    	imagen.move(direccion_x * Aleatori.obtener(VELOCIDAD_MAXIMA),direccion_y * Aleatori.obtener(VELOCIDAD_MAXIMA));
+    	imagen.move(direccion_x * Aleatorio.obtener(VELOCIDAD_MAXIMA), direccion_y * Aleatorio.obtener(VELOCIDAD_MAXIMA));
     	direccion_x = calcular_direccion_x();
     	direccion_y = calcular_direccion_y();
     	if (direccion_x + direccion_y == 0){
@@ -92,15 +92,41 @@ public class soldado {
     	}
     	return 1;
     }
-    
+    private final void flip_horizontal(){
+        int[][] array = imagen.getPixelArray();
+        int height = array.length;
+        int width = array[0].length;
+
+        for (int i = 0; i < height; i++) {
+            for (int e = 0; e < width / 2; e++) {
+                int a = width - e - 1;
+                int temp = array[i][e];
+                array[i][e] = array[i][a];
+                array[i][a] = temp;
+            }
+        }
+        imagen.setImage(new GImage(array).getImage());
+    }
+
     public final void definir_destino(final int posicion_final){
     	destino_x = posicion_final - (int) imagen.getWidth()/2;
     	direccion_x = calcular_direccion_x();
     	if (direccion_x != mirando_a){
     		mirando_a *= -1;
-    		flipHorizontal();
+    		flip_horizontal();
     	}
     }
 
+    public final void definir_destino(final int posicionx, final int posiciony){
+    	definir_destino(posicionx);
+        destino_y = posiciony;
+        direccion_y = calcular_direccion_y();
+    }
 
+    public final String toString(){
+    	return imagen.getX() + " " + imagen.getY() + " -> "
+                + destino_x + "," + destino_y + " ("
+                + direccion_x + "," + direccion_y + ")";
+    }
 }
+
